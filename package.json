@@ -26,6 +26,6 @@
     "hexo-static-cos": "^0.0.2",
     "hexo-theme-fluid": "^1.9.8",
     "hexo-theme-landscape": "^1.0.0",
-    "mouse-firework": "^0.0.6"
+    "mouse-firework": "^0.1.1"
   }
 }
