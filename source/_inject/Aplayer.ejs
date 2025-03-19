@@ -1,0 +1,44 @@
+<%
+theme.Aplayer = theme.Aplayer || {};
+theme.Aplayer.enable = theme.Aplayer.enable !== undefined ? theme.Aplayer.enable : false;
+theme.Aplayer.server = theme.Aplayer.server || '';
+theme.Aplayer.type = theme.Aplayer.type || '';
+theme.Aplayer.id = theme.Aplayer.id || '';
+theme.Aplayer.autoplay = theme.Aplayer.autoplay !== undefined ? theme.Aplayer.autoplay : false;
+theme.Aplayer.fixed = theme.Aplayer.fixed !== undefined ? theme.Aplayer.fixed : false;
+theme.Aplayer.volume = theme.Aplayer.volume || '';
+theme.Aplayer.loop = theme.Aplayer.loop || '';
+theme.Aplayer.order = theme.Aplayer.order || '';
+theme.Aplayer.auto = theme.Aplayer.auto !== undefined ? theme.Aplayer.auto : false;
+theme.Aplayer.mini = theme.Aplayer.mini !== undefined ? theme.Aplayer.mini : false;
+theme.Aplayer.theme = theme.Aplayer.theme || '';
+theme.Aplayer.preload = theme.Aplayer.preload || '';
+theme.Aplayer.mutex = theme.Aplayer.mutex !== undefined ? theme.Aplayer.mutex : false;
+theme.Aplayer.lrcType = theme.Aplayer.lrcType || '';
+theme.Aplayer.listFolded = theme.Aplayer.listFolded !== undefined ? theme.Aplayer.listFolded : false;
+theme.Aplayer.listMaxHeight = theme.Aplayer.listMaxHeight || '';
+theme.Aplayer.storageName = theme.Aplayer.storageName || '';
+%>
+
+<% if (theme.Aplayer.enable) { %>
+  <!-- 渲染播放器 -->
+  <meting-js
+    server="<%= theme.Aplayer.server %>"
+    type="<%= theme.Aplayer.type %>"
+    id="<%= theme.Aplayer.id %>"
+    autoplay="<%= theme.Aplayer.autoplay %>"
+    fixed="<%= theme.Aplayer.fixed %>"
+    volume="<%= theme.Aplayer.volume %>"
+    loop="<%= theme.Aplayer.loop %>"
+    order="<%= theme.Aplayer.order %>"
+    auto="<%= theme.Aplayer.auto %>"
+    mini="<%= theme.Aplayer.mini %>"
+    theme="<%= theme.Aplayer.theme %>"
+    preload="<%= theme.Aplayer.preload %>"
+    mutex="<%= theme.Aplayer.mutex %>"
+    lrc-type="<%= theme.Aplayer.lrcType %>"
+    list-folded="<%= theme.Aplayer.listFolded %>"
+    list-max-height="<%= theme.Aplayer.listMaxHeight %>"
+    storage-name="<%= theme.Aplayer.storageName %>">
+  </meting-js>
+<% } %>
