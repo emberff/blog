@@ -43,6 +43,7 @@
 
 .typed-cursor {
     color: #475164;
+    display: inline-block;
     user-select: none;
 }
 

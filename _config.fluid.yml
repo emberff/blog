@@ -610,8 +610,7 @@ index:
         惟江上之清风，<br>
         <span class="second-line">　　　　　　与山间之明月!</span>
       </span>
-
-      <span class="emoji">🌕</span>
+      🌕
 
 
     # 通过 API 接口作为首页副标题的内容，必须返回的是 JSON 格式，如果请求失败则按 text 字段显示，该功能必须先开启 typing 打字机功能
