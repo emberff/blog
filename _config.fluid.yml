@@ -317,7 +317,7 @@ Aplayer:
 # 网页访问统计
 # Analysis of website visitors
 web_analytics:
-  enable: false
+  enable: true
 
   # 遵循访客浏览器"请勿追踪"的设置，如果开启则不统计其访问
   # Follow the "Do Not Track" setting of the visitor's browser
@@ -363,11 +363,11 @@ web_analytics:
   umami:
     # umami js 文件地址，需要在 umami 后台创建站点后获取
     # umami js file url, get after create website in umami
-    src:
+    src: "http://113.44.44.71:3000/script.js"
 
     # umami 的 website id，需要在 umami 后台创建站点后获取
     # umami website id, get after create website in umami
-    website_id:
+    website_id: "ccd09e3b-3cea-4660-8af1-dc4c52b803d7"
 
     # 如果你只想统计特定的域名可以填入此字段，多个域名通过逗号分隔，这可以避免统计 localhost。
     # If you only want to tracker to specific domains you can fill in this field, multiple domain names are separated by commas, which can avoid tracker localhost
@@ -375,7 +375,7 @@ web_analytics:
 
     # 用于统计 PV UV 的开始时间，格式为 "YYYY-MM-DD"
     # statistics on the start time, the format is "YYYY-MM-DD"
-    start_time: 2024-01-01
+    start_time: 
 
     # 新建一个 umami viewOnly 用户，然后通过 login api 获取该用户 token
     # create an umami viewOnly user, and then get user token through the login api
@@ -383,7 +383,7 @@ web_analytics:
 
     # 填写 umami 部署的服务器地址，如 "https://umami.example.com"
     # server url of umami deployment, such as "https://umami.example.com"
-    api_server:
+    api_server: 
 
 # Canonical 用于向 Google 搜索指定规范网址，开启前确保 hexo _config.yml 中配置 `url: http://yourdomain.com`
 # Canonical, to specify a canonical URL for Google Search, need to set up `url: http://yourdomain.com` in hexo _config.yml
