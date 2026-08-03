@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "hexo-theme-development": {
+      "source": "hsiangfeng/hexo-skills",
+      "sourceType": "github",
+      "skillPath": "hexo-skills/SKILL.md",
+      "computedHash": "1548fc58ea3c53ed09a923abe10b197f696d320bb04d96dd5f3aed1fc8d6be68"
+    }
+  }
+}

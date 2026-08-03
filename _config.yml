@@ -109,13 +109,13 @@ theme: fluid  # 指定主题
 
 #云服务器
 deploy:
-  # 云服务器
-  - type: git
-    repo: git@113.44.44.71:/var/repo/blog.git
-    branch: master
-
-  # # github
+  # # 云服务器
   # - type: git
-  #   repo: https://github.com/emberff/emberff.github.io
-  #   branch: main
+  #   repo: git@113.44.44.71:/var/repo/blog.git
+  #   branch: master
+
+  # github
+  - type: git
+    repo: git@github.com:emberff/emberff.github.io.git
+    branch: main
 

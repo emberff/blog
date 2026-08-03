@@ -238,16 +238,9 @@ custom_js:
   # 网站运行时间
   - /js/duration.js
 
-  # 浏览器标签页
-  - /js/custom.js
-  
   # 鼠标点击特效
   - /js/anime.js
   - /js/fireworks.js
-
-  # 音乐播放器
-  - //fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.js
-  - //fastly.jsdelivr.net/npm/meting@2/dist/Meting.min.js
 
   # 加载动画
   - /js/loader.js
@@ -265,14 +258,8 @@ custom_css:
   # 头部打字机颜色效果渐变
   - /css/subtitle.css
 
-  # 滚动条
-  - /css/scrollbar.css
-
   # 页面加载 
   - /css/loader.css
-
-  # Aplayer
-  - //fastly.jsdelivr.net/npm/aplayer/dist/APlayer.min.css
 
   # 代码块mac风格
   - /css/macpanel
@@ -292,27 +279,6 @@ custom_html:
             <canvas class="fireworks" style="position:fixed;left:0;top:0;z-index:99999999;pointer-events:none;"> </canvas>
 
 
-
-# Aplayer 配置
-Aplayer:
-  enable: true  # 控制播放器是否启用
-  server: netease  # 音乐平台
-  type: playlist  # 类型: song, playlist, album, search, artist
-  id: 7069797967  # 歌曲ID / 播放列表ID / 专辑ID / 搜索关键词
-  autoplay: false  # 是否自动播放
-  fixed: true  # 是否启用固定模式
-  volume: 0.1  # 默认音量
-  loop: all  # 播放循环模式: all, one, none
-  order: random  # 播放顺序: list, random
-  auto: false  # 是否启用自动音乐链接
-  mini: true  # 是否启用迷你模式
-  theme: "#2980b9"  # 播放器主色调
-  preload: auto  # 预加载设置: none, metadata, auto
-  mutex: false  # 是否防止多播放器同时播放
-  lrcType: 1  # 歌词类型
-  listFolded: true  # 播放列表是否折叠
-  listMaxHeight:   # 播放列表最大高度
-  storageName:   # localStorage 的键名，用于存储播放器设置 
 
 # 网页访问统计
 # Analysis of website visitors
