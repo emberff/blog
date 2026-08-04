@@ -409,7 +409,6 @@ navbar:
   # Navigation bar menu. `key` is used to associate languages/*.yml. If there is no association, the value of `key` itself will be displayed; if `icon` is a css class, it can be omitted; adding `name` can force the display of the specified name
   menu:
     - { key: "home", link: "/", icon: "iconfont icon-home-fill" }
-    - { key: "说说", link: "/shuoshuo/", icon: "iconfont icon-wechat2-fill" }
     - {
         key: '文章',
         icon: 'iconfont icon-books',
@@ -501,12 +500,6 @@ footer:
     <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a>
     <i class="iconfont icon-love"></i>
     <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
-
-    <!-- 一言 -->
-    <div class="statistics">
-      <a href="https://developer.hitokoto.cn/" id="hitokoto_text"><span id="hitokoto"></span></a>
-      <script src="https://v1.hitokoto.cn/?c=h&c=i&c=k&encode=js&select=%23hitokoto" defer></script>
-    </div>
 
     <!-- 博客上线天数 -->
     <div>
