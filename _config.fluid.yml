@@ -551,7 +551,7 @@ index:
   # 首页 Banner 头图，可以是相对路径或绝对路径，以下相同
   # Path of Banner image, can be a relative path or an absolute path, the same on other pages
   # banner_img: /img/default.png
-  banner_img: /background/Spiraling Cityscape.jpg
+  banner_img: https://blog-1318796820.cos.ap-shanghai.myqcloud.com/Spiraling%20Cityscape.jpg
 
   # 头图高度，屏幕百分比
   # Height ratio of banner image
@@ -630,7 +630,7 @@ index:
 # Post Page
 #---------------------------
 post:
-  banner_img: /background/arch.jpg
+  banner_img: https://blog-1318796820.cos.ap-shanghai.myqcloud.com/arch.jpg
   banner_img_height: 70
   banner_mask_alpha: 0.3
 
