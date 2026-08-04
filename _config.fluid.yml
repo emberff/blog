@@ -283,7 +283,7 @@ custom_html:
 # 网页访问统计
 # Analysis of website visitors
 web_analytics:
-  enable: true
+  enable: false
 
   # 遵循访客浏览器"请勿追踪"的设置，如果开启则不统计其访问
   # Follow the "Do Not Track" setting of the visitor's browser
@@ -329,7 +329,8 @@ web_analytics:
   umami:
     # umami js 文件地址，需要在 umami 后台创建站点后获取
     # umami js file url, get after create website in umami
-    src: "http://113.44.44.71:3000/script.js"
+    # 已关闭：自建服务 113.44.44.71:3000 无法连接，取消注释可恢复
+    # src: "http://113.44.44.71:3000/script.js"
 
     # umami 的 website id，需要在 umami 后台创建站点后获取
     # umami website id, get after create website in umami
