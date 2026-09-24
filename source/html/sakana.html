@@ -6,43 +6,60 @@
 
   // 初始化 Sakana Widget
   function initSakanaWidget() {
-    if (isMobileDevice()) {
-      // 如果是手机端，退出函数不加载 Widget
+    if (isMobileDevice() || typeof SakanaWidget === 'undefined') {
       return;
     }
-    
-    // 获取角色
-    const takina = SakanaWidget.getCharacter('takina');
-    takina.initialState = {
-      ...takina.initialState,
-      i: 0.001,
-    };
 
-    const chisato = SakanaWidget.getCharacter('chisato');
-    chisato.initialState = {
-      ...chisato.initialState,
+    // 获取角色
+    var takina = SakanaWidget.getCharacter('takina');
+    takina.initialState = Object.assign({}, takina.initialState, {
+      i: 0.001,
+    });
+
+    var chisato = SakanaWidget.getCharacter('chisato');
+    chisato.initialState = Object.assign({}, chisato.initialState, {
       i: 0.001
-    };
-    
+    });
+
     // 随机选择角色
-    const selectedCharacter = Math.floor(Math.random() * 2) === 0 ? takina : chisato;
+    var selectedCharacter = Math.floor(Math.random() * 2) === 0 ? takina : chisato;
     SakanaWidget.registerCharacter('custom', selectedCharacter);
-    
+
     // 使用构造函数初始化 SakanaWidget
     new SakanaWidget({
       character: 'custom',
       controls: false
     }).mount('#sakana-widget');
   }
-</script>
 
-<!-- 仅在非手机端加载样式和脚本 -->
-<script>
-  if (!isMobileDevice()) {
-    document.write(`
-      <link rel="stylesheet" href="https://fastly.jsdelivr.net/npm/sakana-widget@2.7.0/lib/sakana.min.css" />
-      <div id="sakana-widget" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;"></div>
-      <script async onload="initSakanaWidget()" src="https://fastly.jsdelivr.net/npm/sakana-widget@2.7.0/lib/sakana.min.js"><\/script>
-    `);
+  // 仅非移动端加载，且在首屏之后再注入，避免阻塞渲染
+  function loadSakanaWidget() {
+    if (isMobileDevice()) {
+      return;
+    }
+
+    var base = 'https://registry.npmmirror.com/sakana-widget/2.7.0/files/lib/';
+
+    var widget = document.createElement('div');
+    widget.id = 'sakana-widget';
+    widget.style.cssText = 'position: fixed; bottom: 20px; right: 20px; z-index: 1000;';
+    document.body.appendChild(widget);
+
+    var css = document.createElement('link');
+    css.rel = 'stylesheet';
+    css.href = base + 'sakana.min.css';
+    document.head.appendChild(css);
+
+    var js = document.createElement('script');
+    js.src = base + 'sakana.min.js';
+    js.async = true;
+    js.onload = initSakanaWidget;
+    document.head.appendChild(js);
+  }
+
+  if (document.readyState === 'complete') {
+    loadSakanaWidget();
+  } else {
+    window.addEventListener('load', loadSakanaWidget);
   }
 </script>

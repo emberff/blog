@@ -9,6 +9,13 @@
    justify-content: center;
    align-items: center;
    background: rgba(0, 0, 0, 0.7); /* 可选：添加背景以增加可见性 */
+   transition: opacity 0.56s ease;
+}
+
+#loader-container.loader-hidden {
+   opacity: 0;
+   visibility: hidden;
+   pointer-events: none;
 }
 
 .loader,

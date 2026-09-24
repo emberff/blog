@@ -13,7 +13,7 @@ timezone: ''
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
-url: http://example.com
+url: https://emberff.github.io
 permalink: :year/:month/:day/:title/
 permalink_defaults:
 pretty_urls:
@@ -118,4 +118,26 @@ deploy:
   - type: git
     repo: git@github.com:emberff/emberff.github.io.git
     branch: main
+
+# HTML / CSS / JS 压缩（hexo-all-minifier）
+# 图片压缩单独处理，关闭插件内置的 image_minifier 以免依赖缺失的可执行文件
+all_minifier: true
+html_minifier:
+  enable: true
+  removeComments: true
+  collapseWhitespace: true
+  minifyJS: true
+  minifyCSS: true
+  ignore_error: true
+css_minifier:
+  enable: true
+  exclude:
+    - "*.min.css"
+js_minifier:
+  enable: true
+  mangle: true
+  exclude:
+    - "*.min.js"
+image_minifier:
+  enable: false
 

@@ -235,18 +235,11 @@ font:
 # Specify the path of your custom js file, support list. The path is relative to the source directory, such as `/js/custom.js` corresponding to the directory `source/js/custom.js`
 custom_js: 
 
-  # 网站运行时间
-  - /js/duration.js
-
-  # 鼠标点击特效
-  - /js/anime.js
-  - /js/fireworks.js
-
-  # 加载动画
+  # 加载动画（已去除外部 jQuery 依赖，尽早执行以隐藏遮罩）
   - /js/loader.js
 
-  # 底部养鱼动画
-  - /js/fishes
+  # 首屏后延迟加载装饰脚本（anime/fireworks/fishes/duration）
+  - /js/deferred.js
 
 # 指定自定义 .css 文件路径，用法和 custom_js 相同
 # The usage is the same as custom_js
@@ -544,8 +537,8 @@ footer:
 index:
   # 首页 Banner 头图，可以是相对路径或绝对路径，以下相同
   # Path of Banner image, can be a relative path or an absolute path, the same on other pages
-  # banner_img: /img/default.png
-  banner_img: https://blog-1318796820.cos.ap-shanghai.myqcloud.com/Spiraling%20Cityscape.jpg
+  # banner_img: /img/default.webp
+  banner_img: https://blog-1318796820.cos.ap-shanghai.myqcloud.com/Spiraling%20Cityscape.jpg?imageMogr2/thumbnail/1600x/format/webp/quality/75
 
   # 头图高度，屏幕百分比
   # Height ratio of banner image
@@ -988,7 +981,7 @@ discuss:
 # Archive Page
 #---------------------------
 archive:
-  banner_img: /img/default.png
+  banner_img: /img/default.webp
   banner_img_height: 60
   banner_mask_alpha: 0.3
 
@@ -999,7 +992,7 @@ archive:
 #---------------------------
 category:
   enable: true
-  banner_img: /img/default.png
+  banner_img: /img/default.webp
   banner_img_height: 60
   banner_mask_alpha: 0.3
 
@@ -1028,7 +1021,7 @@ category:
 #---------------------------
 tag:
   enable: true
-  banner_img: /img/default.png
+  banner_img: /img/default.webp
   banner_img_height: 80
   banner_mask_alpha: 0.3
   tagcloud:
@@ -1045,7 +1038,7 @@ tag:
 #---------------------------
 about:
   enable: true
-  banner_img: /img/default.png
+  banner_img: /img/default.webp
   banner_img_height: 60
   banner_mask_alpha: 0.3
   avatar: /img/avatar.png
@@ -1067,7 +1060,7 @@ about:
 # Custom Page through `hexo new page`
 #---------------------------
 page:
-  banner_img: /img/default.png
+  banner_img: /img/default.webp
   banner_img_height: 60
   banner_mask_alpha: 0.3
 
@@ -1078,7 +1071,7 @@ page:
 #---------------------------
 page404:
   enable: true
-  banner_img: /img/default.png
+  banner_img: /img/default.webp
   banner_img_height: 85
   banner_mask_alpha: 0.3
   # 重定向到首页的延迟(毫秒)
@@ -1092,7 +1085,7 @@ page404:
 #---------------------------
 links:
   enable: true
-  banner_img: /img/default.png
+  banner_img: /img/default.webp
   banner_img_height: 60
   banner_mask_alpha: 0.3
   # 友链的成员项
