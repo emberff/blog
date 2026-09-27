@@ -72,7 +72,7 @@ npm config get registry                              # 期望：https://registry
 ├── _config.yml              # 站点主配置：url、theme: fluid、deploy: git、hexo-all-minifier
 ├── _config.fluid.yml        # 主题配置（约 1200 行）：navbar.menu、links.items、banner、footer.beian、custom_js
 ├── _config.landscape.yml    # 备用主题配置（空，未启用）
-├── package.json             # 锁定 hexo 8.1.2；scripts: build / clean / deploy / server
+├── package.json             # 锁定 hexo 8.1.2；scripts: build / clean / deploy / publish / server
 ├── source/
 │   ├── _posts/              # 19 篇文章（.md）
 │   ├── links/index.md       # 友链页（layout: links）
@@ -733,23 +733,42 @@ gh auth status 2>&1 | head -3
 - Windows 侧当作**只读备份**（需要时 `git pull` 同步，或干脆删掉它的 `.git`，只留文件当留档）；
 - 不要再用 `/mnt/c` 上的副本跑 hexo 或 git。
 
-### 6.3 把"清理 + 构建 + 部署"固化成脚本
+### 6.3 「清理 + 构建 + 部署」已固化为 `npm run publish`（2026-09-27 已完成）
 
-现状：`package.json` 里已有 `build` / `clean` / `deploy` / `server` 四个脚本，但 `npm run deploy` **只是 `hexo deploy`**——它不会先 clean/generate，直接跑会把旧的 `public/` 推上去。建议加一个明确的组合脚本（改动很小）：
+**背景**：`package.json` 原本有 `build` / `clean` / `deploy` / `server` 四个脚本，但 `npm run deploy` **只是 `hexo deploy`**——它不会先 clean/generate，直接跑会把**旧的** `public/` 推上去，等于发布一个过期站点。
+
+**已添加**（`package.json` 的 `scripts`）：
 
 ```json
 "publish": "hexo clean && hexo generate && hexo deploy"
 ```
 
-如果不想改，就坚持手打 `npx hexo clean && npx hexo generate && npx hexo deploy`，别图快只跑 `npm run deploy`。
+**以后部署用这一条**：
+
+```bash
+cd /home/emberff/blog
+npm run publish          # = clean + generate + deploy，一步到位
+```
+
+- `npm run deploy` 仍然保留（只做 `hexo deploy`），但**正常情况下不要直接用它**。
+- 状态：✅ 已完成。
 
 ### 6.4 给部署加前置检查
 
-部署前至少确认三件事（可写成一个 `predeploy` 脚本）：
+部署前至少确认三件事（**目前靠自觉，尚未脚本化**）：
 
 1. `git status --porcelain` 干净（没有未提交的文章改动被漏掉）；
 2. 本地 HEAD == `origin/main`（源码已 push，没出现"部署了新文章但源码仓库还是旧的"）；
 3. `git config --global user.name` / `user.email` 非空（防第 3.2 条的静默失败）。
+
+现成的一条命令：
+
+```bash
+cd /home/emberff/blog
+git status --porcelain && git rev-parse HEAD origin/main && git config --global user.name && git config --global user.email
+```
+
+> 注意一个顺序陷阱：**改了 `package.json`（比如刚加 `publish`）会让自己处于"未提交"状态**，与第 1 条冲突。正确顺序是——先 `git add package.json && git commit && git push`，再 `npm run publish`。因为 `hexo deploy` 推的是 `public/` 产物、不是源码工作区，源码脏不影响部署本身；但"部署的版本 == 源码的版本"这个可追溯性要求它是干净的。
 
 ### 6.5 可选：GitHub Actions 自动部署
 
@@ -840,6 +859,37 @@ git show HEAD~1:source/background/girl.jpg > source/background/girl.jpg   # 换�
 - [ ] `npx hexo clean && npx hexo generate` 通过，文件数变化可解释
 
 > 为什么用 `AGENTS.md` 而不是只写在手册里：手册要人（或 agent）主动去读，而 `AGENTS.md` 由 harness 在每次会话开始时自动注入上下文，是唯一"不靠自觉"的落点。两者分工——`AGENTS.md` 负责**让规则被看见**，本手册负责**记录知识本身**。改规则时两处都要同步。
+
+### 6.9 部署记录（2026-09-27：首次用 `npm run publish` 上线）
+
+**做了什么**：新增 `npm run publish` 脚本（见 6.3）并**用它完成一次部署**，把 6.7 的图片清理同步到线上。
+
+**执行序列**（可复用）：
+
+```bash
+cd /home/emberff/blog
+# 1) 先让源码干净（改了 package.json 必须先进提交，见 6.4 的顺序陷阱）
+git add package.json && git commit -m "chore: 新增 publish 脚本（clean + generate + deploy）"
+GIT_SSH_COMMAND="ssh -o ConnectTimeout=15 -o ServerAliveInterval=10" git push origin main
+# 2) 再构建并部署
+GIT_SSH_COMMAND="ssh -o ConnectTimeout=15 -o ServerAliveInterval=10" npm run publish
+```
+
+**结果（可复核的值）**：
+
+| 项 | 值 |
+|---|---|
+| 源码仓库 `emberff/blog` main | `caf9977` → `28c2586`（文档+清图）→ **`f30e0de`**（publish 脚本） |
+| 部署仓库 `emberff.github.io` main | `f716644` → **`04bc084`**（`Site updated: 2026-09-27 15:53:51`） |
+| Pages 构建 | `status: built` |
+| 构建产物 | **106 files**（clean 后重新生成） |
+| 被删图片 | `background/planet.jpg`、`background/NotFound.png` 等 → **HTTP 404**（已用不存在的文件名做 404 基准对照） |
+| 保留的图片 | `background/Spiraling Cityscape.jpg` → **200**、`background/arch.jpg` → 200 |
+| 首页 | **200** |
+
+**过程中观察到的现象（不需要处理）**：部署刚完成时，被删图片的 URL 有**几十秒的 CDN 缓存窗口**仍返回 200（首测 `girl.jpg` 为 200，稍后复测为 404）。所以**不要部署完立刻用旧 URL 的 200 判断"没删掉"**，等 30 秒~1 分钟或换个不存在的文件名做对照。
+
+**关键提醒**：`hexo deploy` 用 `-f` 强推 `.deploy_git`，部署仓库的历史是被覆盖式的单次提交（所以 `.deploy_git` 里只有 `04bc084` + `4d78551 First commit`），**不要指望在部署仓库里回溯历史**——历史只在源码仓库 `emberff/blog` 里。
 
 ---
 
