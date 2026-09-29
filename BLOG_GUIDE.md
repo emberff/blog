@@ -893,6 +893,34 @@ GIT_SSH_COMMAND="ssh -o ConnectTimeout=15 -o ServerAliveInterval=10" npm run pub
 
 **关键提醒**：`hexo deploy` 用 `-f` 强推 `.deploy_git`，部署仓库的历史是被覆盖式的单次提交（所以 `.deploy_git` 里只有 `04bc084` + `4d78551 First commit`），**不要指望在部署仓库里回溯历史**——历史只在源码仓库 `emberff/blog` 里。
 
+### 6.10 部署记录（2026-09-29：新增一篇排障文章，`npm run publish` 第二次上线）
+
+**做了什么**：新增一篇文章（`source/_posts/小程序access_token失效与WSL端口保留排障记录.md`），同时把手册里 4 处写死的「期望 106 files」改成「N files，变化可解释」（见 6.8），提交后走 `npm run publish` 上线。
+
+**执行序列**：
+
+```bash
+cd /home/emberff/blog
+git add -- "source/_posts/小程序access_token失效与WSL端口保留排障记录.md" BLOG_GUIDE.md
+git commit -m "新增小程序access_token失效与WSL端口保留排障记录博客"
+GIT_SSH_COMMAND="ssh -o ConnectTimeout=15 -o ServerAliveInterval=10" git push origin main
+GIT_SSH_COMMAND="ssh -o ConnectTimeout=15 -o ServerAliveInterval=10" npm run publish
+```
+
+**结果（可复核的值）**：
+
+| 项 | 值 |
+|---|---|
+| 源码仓库 `emberff/blog` main | `39d997f` → **`8f02109`**（本地 HEAD 与 `origin/main` 一致） |
+| 部署仓库 `emberff.github.io` main | `04bc084` → **`5d4be5a`**（`Site updated: 2026-09-29 15:39:22`，`26 files changed`） |
+| Pages 构建 | `status: built` |
+| 构建产物 | **`111 files`**（新增 1 篇文章页 + 4 个新标签页） |
+| 新文章 permalink | **200** |
+| 首页 / 不存在的路径 | 首页 **200**、`/2026/09/29/nope/` **404** |
+| 线上内容抽检 | 标题命中、note 块 5、`<table>` 23、mermaid 1（与本地构建完全一致） |
+
+**顺带得到的经验（写进 6.8 的原因）**：新增一篇文章只要带了新标签，构建产物就会多出文章页 + 若干 `tags/<标签>/index.html` —— 所以**文件数不是固定值**，`git status` 里出现 `tags/` 相关的新文件属正常，别当成噪声删掉。
+
 ---
 
 *本文只描述操作与事实，不复制 `.agents/skills/hexo-theme-development/` 的内容；改主题相关代码时请直接读该技能文档。*
