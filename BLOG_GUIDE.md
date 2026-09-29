@@ -95,7 +95,7 @@ npm config get registry                              # 期望：https://registry
         │  git add → git commit → git push origin main
         ▼
 [源码仓库 emberff/blog (main)]  ← 版本管理 + 备份（public 仓库！见 4.5 红线）
-        │  npx hexo clean && npx hexo generate   → public/（106 files）
+        │  npx hexo clean && npx hexo generate   → public/（文件数随文章数变化，见 6.8）
         │  npx hexo deploy                        （hexo-deployer-git）
         ▼
 [.deploy_git 临时仓库]  ──push──▶  [emberff/emberff.github.io (main)]
@@ -163,7 +163,8 @@ npm run build
 
 ```bash
 npx hexo clean && npx hexo generate
-# 期望：INFO  Files loaded in ... / INFO  Generated: ... / INFO  106 files generated in ...，无 FATAL
+# 期望：INFO  Files loaded in ... / INFO  Generated: ... / INFO  N files generated in ...，无 FATAL
+# 注意 N 不是固定值：每新增一篇文章会连带产生标签页，判断标准是「变化可解释」，见 6.8
 ```
 
 **改配置/主题/JS/CSS 后必须重启** server，watch 对 `_config*.yml` 的改动不完全可靠。
@@ -208,7 +209,7 @@ GIT_SSH_COMMAND="ssh -o ConnectTimeout=15 -o ServerAliveInterval=10" git push -v
 npx hexo clean && npx hexo generate && npx hexo deploy
 ```
 
-- 期望看到 `INFO  106 files generated ...`，随后 `hexo-deployer-git` 打印类似 `[master xxxxxxx] Site updated: ...` 与 **`INFO  Deploy done: git`**，最后 push 成功。
+- 期望看到 `INFO  N files generated ...`（N 随文章数变化，见 6.8），随后 `hexo-deployer-git` 打印类似 `[master xxxxxxx] Site updated: ...` 与 **`INFO  Deploy done: git`**，最后 push 成功。
 - **警告**：`Deploy done: git` 可能骗人（`Everything up-to-date` + `Deploy done` 但实际没推上去）。不做全局 git 身份就会这样，判断真假必须看下一步。
 - 网络不稳时按第 3.11 条包裹：
 
@@ -655,7 +656,7 @@ npm run server -- -p 4011        # 打开 http://localhost:4011/ 逐页确认
 
 ```bash
 cd /home/emberff/blog
-npx hexo clean && npx hexo generate     # 期望：INFO  106 files generated，无 FATAL
+npx hexo clean && npx hexo generate     # 期望：无 FATAL（文件数 N 随文章数变化，见 6.8）
 ```
 
 **C. 审批通过 → 同步源码 → 部署 → 线上验证**
@@ -854,7 +855,8 @@ git show HEAD~1:source/background/girl.jpg > source/background/girl.jpg   # 换�
 **收尾自检清单**：
 
 - [ ] 手册已更新，或本次改动确实属于"不改手册"的范畴
-- [ ] 手册里的版本号 / 文件数（当前 **106**）/ 命令与实际一致
+- [ ] 手册里的版本号 / 文件数 / 命令与实际一致
+      （**文件数不是固定值**：`106` 是 2026-09-27 清图后的基线，每新增一篇文章会连带多出文章页 + 标签页；2026-09-29 新增 1 篇后为 `111`。判断标准是"变化可解释"，不是"必须等于 106"）
 - [ ] 新增结论都附了可执行的自查方法
 - [ ] `npx hexo clean && npx hexo generate` 通过，文件数变化可解释
 
