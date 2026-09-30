@@ -9,7 +9,7 @@
 | --- | --- | --- |
 | 写一篇新文章、预览、发布上线 | [`docs/写作与发布.md`](docs/写作与发布.md) | 约 310 行 |
 | 遇到一个报错，想知道以前是否踩过 | 先看本页下面的「症状速查」；需要原因分析再进 [`docs/踩坑库.md`](docs/踩坑库.md) | 约 300 行 |
-| 改仓库本身：项目结构 / 性能 / 配置 / 版本 | [`docs/维护与优化.md`](docs/维护与优化.md) | 约 225 行 |
+| 改仓库本身：项目结构 / 性能 / 配置 / 版本 | [`docs/维护与优化.md`](docs/维护与优化.md) | 约 235 行 |
 | 忘了某条命令 / 版本号 / 目录在哪 | 本页第 1 节 | — |
 | **改了仓库，要不要记点什么** | 本页「改动必须回写手册」 | — |
 
@@ -28,16 +28,24 @@
 
 ## 1. 环境与目录总览
 
-### 1.1 两处工作副本
+### 1.1 工作副本：动手前先拉取
 
-| | WSL 侧（**推荐日常使用**） | Windows 侧（历史/备份副本） |
-| --- | --- | --- |
-| 路径 | `/home/emberff/blog` | `C:\Users\15222\blog`（WSL 里是 `/mnt/c/Users/15222/blog`） |
-| 文件系统 | 原生 ext4 | 9p 挂载（`drvfs`） |
-| 状态 | 已 `git clone`，HEAD = `122496b`，`npm ci` 装好 613 个包（`node_modules` 113 MB） | 已同步到 `122496b`；但 `node_modules` 停在 2026-08-06，**缺 `hexo-all-minifier`**，所以构建产物不压缩（`public/index.html` 36913 B，WSL 侧为 25877 B） |
-| 用途 | 日常编写、预览、构建、部署 | 只当备份/留档，**不要**在这里调试 |
+`git@github.com:emberff/blog.git` 是**唯一真相源**。本机可能同时存在多份克隆，它们**没有主副之分**——哪一份都能用，只要动手前拉取最新：
 
-**为什么只推 WSL 侧**：`/mnt/c` 是 9p 挂载，bash 侧写入会被拒（第 3.1 条），`hexo g` 直接 `EACCES`；`hexo s` 还会在 9p 上做文件 watch 卡成 `Dsl` 不可中断状态（第 3.8 条）。同一套命令在 `/home/emberff/blog` 全部正常。两处副本并存只会带来"哪边是最新"的漂移（第 6.2 条）。
+```bash
+cd <你正在用的那份副本>
+git pull --ff-only origin main     # 落后就先追平，避免基于旧版本改动
+git log -1 --oneline               # 确认与 origin/main 是同一个 sha
+```
+
+| 副本 | 路径 | 文件系统 | 说明 |
+| --- | --- | --- | --- |
+| WSL 侧 | `/home/emberff/blog` | 原生 ext4 | 已 `npm ci`（613 个包），`hexo g` / `hexo s` 均正常 |
+| Windows 侧 | `C:\Users\15222\blog` | NTFS（WSL 里是 `/mnt/c/Users/15222/blog`） | 在 Windows 原生环境里操作正常（实测 `hexo generate` → 111 files） |
+
+> **从 WSL 操作 `/mnt/c` 的限制是 9p 文件系统造成的，不是"这一侧不能改"**：在那里 `hexo g` 报 `EACCES`（第 3.1 条）、`hexo s` 会卡成 `Dsl`（第 3.8 条）；换 Windows 原生侧（PowerShell / cmd / IDE）或 WSL 原生目录都不受影响。
+>
+> **`node_modules` 不随 `git pull` 更新**（它被 git 忽略）：`package.json` 变动后要重跑 `npm install`，否则构建产物会不完整——例如缺 `hexo-all-minifier` 时首页压缩失效（`public/index.html` 36913 B vs 25877 B）。
 
 ### 1.2 版本与身份（**已核实，不必再查**）
 
@@ -47,7 +55,7 @@
 | hexo-theme-fluid | **1.9.9** |
 | hexo-renderer-marked | **7.0.1** |
 | hexo-all-minifier | **0.5.7** |
-| Node / npm | **v24.19.0**（nvm 管理）/ **11.17.0** |
+| Node / npm | **v24.19.0**（nvm 管理）/ **11.17.0** —— WSL 侧实测；Windows 侧为 v22.20.0 / npm 10.9.3，同样能跑 hexo 8.1.2 |
 | 全局 hexo-cli | 4.3.2，**不必需**——用 `npx hexo` / `npm run server` 才会用到仓库锁定的 hexo 8.1.2 |
 
 ```bash
@@ -96,7 +104,7 @@ npm config get registry                              # 期望：https://registry
 ### 1.4 部署链路
 
 ```
-[本地 WSL 工作副本 /home/emberff/blog]
+[本地工作副本]
         │  git add → git commit → git push origin main
         ▼
 [源码仓库 emberff/blog (main)]  ← 版本管理 + 备份（public 仓库！见 4.5 红线）
@@ -119,7 +127,7 @@ npm config get registry                              # 期望：https://registry
 
 | 症状 | 一句话解决 | 详见 |
 | --- | --- | --- |
-| `EACCES: permission denied, open '.../public/...'` | 你在 `/mnt/c` 上构建。换到 `/home/emberff/blog` | [3.1](docs/踩坑库.md) |
+| `EACCES: permission denied, open '.../public/...'` | 你在 WSL 里对 `/mnt/c` 构建（9p 限制）。换 WSL 原生目录，或在 Windows 原生侧构建 | [3.1](docs/踩坑库.md) |
 | `hexo d` 打印 `Deploy done` 但线上没变 | 检查 `git config --global user.name/user.email` 是否为空 | [3.2](docs/踩坑库.md) |
 | `Author identity unknown` / `empty ident name` | 同上：设全局 git 身份 | [3.2](docs/踩坑库.md) |
 | `ssh_askpass: ... No such file or directory` / `Host key verification failed.` | `~/.ssh` 不存在或权限不对：复制密钥 + `chmod 600` | [3.3](docs/踩坑库.md) |
@@ -127,7 +135,7 @@ npm config get registry                              # 期望：https://registry
 | note 块里的代码/列表糊成一行 | 把代码块和列表移出 `{% note %}` | [3.5](docs/踩坑库.md) |
 | 表格渲染崩坏 / 断裂 | 单元格里的三反引号改双反引号 | [3.6](docs/踩坑库.md) |
 | mermaid 图报编译错误 | 节点标签加双引号 | [3.7](docs/踩坑库.md) |
-| `hexo s` 打印了地址但访问是 000、进程 `Dsl`、`pkill` 挂住 | 在 `/mnt/c` 上跑 server 卡死。改用 WSL 目录；已卡死就 `fuser -k <port>/tcp` | [3.8](docs/踩坑库.md) |
+| `hexo s` 打印了地址但访问是 000、进程 `Dsl`、`pkill` 挂住 | 在 WSL 里对 `/mnt/c` 跑 server 会卡死（9p 文件 watch）。换 WSL 原生目录或 Windows 原生侧都行；已卡死就 `fuser -k <port>/tcp` | [3.8](docs/踩坑库.md) |
 | PDF 读出来是 `⾃`/`⽤` 这种怪字 | 提取后 `unicodedata.normalize("NFKC", t)` | [3.9](docs/踩坑库.md) |
 | `import fitz` 失败 | 用 `pdfminer.high_level.extract_text` | [3.9](docs/踩坑库.md) |
 | 文章字数从 2.5k 变 7.2k、阅读时间翻倍 | fluid 1.9.9 的口径变化，不是 bug，别修 | [3.10](docs/踩坑库.md) |

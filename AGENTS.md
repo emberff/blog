@@ -39,9 +39,13 @@
 2. **`source/background/` 与 `source/img/`**：删任何静态资源前先全场确认零引用（`grep -rn "文件名" source/ _config*.yml scripts/`），删完必须重新构建验证。
 3. **部署前提**：`hexo d` 用的是独立临时仓库 `.deploy_git`，**不继承**本仓库的本地 git 配置 → 必须已设好**全局** `user.name`/`user.email`，否则会打印 `Deploy done` 但其实没推上去（`docs/踩坑库.md` 3.2）。
 
-## 本仓库的工作副本
+## 工作副本
 
-- **WSL 侧（唯一可写、日常用）**：`/home/emberff/blog`
-- **Windows 侧（只读备份，别在这改）**：`C:\Users\15222\blog`
+`git@github.com:emberff/blog.git` 是唯一真相源。本机可能有多份克隆（`/home/emberff/blog`、`C:\Users\15222\blog`），**无主副之分**——动手前拉取最新即可：`git pull --ff-only origin main`。
 
-在 WSL 侧本地预览：`cd /home/emberff/blog && npm run server` → http://localhost:4000/
+两件与"用哪一份"无关、但会咬人的事：
+
+- **`node_modules` 不随 `git pull` 更新**：`package.json` 变了要重跑 `npm install`，否则构建产物不完整。
+- **从 WSL 访问 `/mnt/c` 构建 / 预览会失败**（9p 限制，`docs/踩坑库.md` 3.1 / 3.8）；在 Windows 原生侧操作不受影响。
+
+本地预览：`cd <副本> && npm run server` → http://localhost:4000/
