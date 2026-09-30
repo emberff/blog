@@ -8,7 +8,7 @@
 | 我要做的事 | 读哪里 | 规模 |
 | --- | --- | --- |
 | 写一篇新文章、预览、发布上线 | [`docs/写作与发布.md`](docs/写作与发布.md) | 约 310 行 |
-| 遇到一个报错，想知道以前是否踩过 | 先看本页下面的「症状速查」；需要原因分析再进 [`docs/踩坑库.md`](docs/踩坑库.md) | 约 300 行 |
+| 遇到一个报错，想知道以前是否踩过 | 先看本页下面的「症状速查」；需要原因分析再进 [`docs/踩坑库.md`](docs/踩坑库.md) | 约 335 行 |
 | 改仓库本身：项目结构 / 性能 / 配置 / 版本 | [`docs/维护与优化.md`](docs/维护与优化.md) | 约 235 行 |
 | 忘了某条命令 / 版本号 / 目录在哪 | 本页第 1 节 | — |
 | **改了仓库，要不要记点什么** | 本页「改动必须回写手册」 | — |
@@ -19,7 +19,7 @@
 | --- | --- |
 | §1 环境与目录总览 | 本页 |
 | §2 博客编写流程 | [`docs/写作与发布.md`](docs/写作与发布.md) |
-| §3 历史踩坑（3.0–3.18） | [`docs/踩坑库.md`](docs/踩坑库.md) |
+| §3 历史踩坑（3.0–3.19） | [`docs/踩坑库.md`](docs/踩坑库.md) |
 | §4 写作规范 | [`docs/写作与发布.md`](docs/写作与发布.md) |
 | §5 常见问题速查 | 症状表在本页，命令块在 [`docs/写作与发布.md`](docs/写作与发布.md) |
 | §6 待完善与建议 | [`docs/维护与优化.md`](docs/维护与优化.md)（6.8 在本页） |
@@ -46,6 +46,8 @@ git log -1 --oneline               # 确认与 origin/main 是同一个 sha
 > **从 WSL 操作 `/mnt/c` 的限制是 9p 文件系统造成的，不是"这一侧不能改"**：在那里 `hexo g` 报 `EACCES`（第 3.1 条）、`hexo s` 会卡成 `Dsl`（第 3.8 条）；换 Windows 原生侧（PowerShell / cmd / IDE）或 WSL 原生目录都不受影响。
 >
 > **`node_modules` 不随 `git pull` 更新**（它被 git 忽略）：`package.json` 变动后要重跑 `npm install`，否则构建产物会不完整——例如缺 `hexo-all-minifier` 时首页压缩失效（`public/index.html` 36913 B vs 25877 B）。
+>
+> **Windows 侧 `git pull` 报 `couldn't create signal pipe`**：那是 DSH 受限沙箱禁止命名管道、MSYS 的 `ssh.exe` 起不来，与仓库无关——改用 HTTPS 拉取即可（第 3.19 条）。
 
 ### 1.2 版本与身份（**已核实，不必再查**）
 
@@ -147,6 +149,7 @@ npm config get registry                              # 期望：https://registry
 | 国内访问 TTFB 抖动大 | Pages 平台限制，配置层无解 | [3.16](docs/踩坑库.md) |
 | `db.json` 体积无故增长 | 无害，它在 `.gitignore` 里；怀疑缓存坏了就 `npm run clean` | [3.17](docs/踩坑库.md) |
 | 从 Windows 侧跑 `wsl.exe` 时 `node: command not found` | 非交互 shell 不读 `.bashrc`，先 `source ~/.nvm/nvm.sh` | [3.18](docs/踩坑库.md) |
+| `git pull` 报 `couldn't create signal pipe` | origin 走 SSH，受限沙箱禁止命名管道。改用 HTTPS 拉取 | [3.19](docs/踩坑库.md) |
 
 ---
 
