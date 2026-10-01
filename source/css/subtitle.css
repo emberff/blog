@@ -52,8 +52,27 @@
     /* vertical-align: middle; 调整emoji垂直对齐方式 */
 }
 
+/* 下半句的错位效果。
+   原来靠 5 个全角空格（写死 108px）+ white-space: pre 实现，在 375px 手机上
+   会把「与山间之明月! 🌕」挤到第二行放不下，月亮掉到第三行。
+   改成 CSS 相对缩进：随字号缩放，不写死像素。
+
+   错位量不是 padding 的绝对值：整块是 text-align:center，两行会各自居中，
+   而第一行开头有 🍃（约 36px），所以实际错位 ≈ padding/2 − emoji宽 − 行宽差/2。
+   5em 对应约 21px 的视觉错位，与原来的全角空格方案相当。 */
 .second-line {
-    white-space: pre;
+    display: inline-block;
+    padding-left: 5em;
+    white-space: nowrap;   /* 下半句连同月亮必须保持一行 */
+}
+
+/* 极窄屏（≤340px，如 320px 的 iPhone SE）：字号收一档，
+   否则「与山间之明月! + 🌕」物理上放不进一行（此时错位会相应减弱，
+   这是窄屏下的必然取舍：先保证不折行）。 */
+@media (max-width: 340px) {
+    #subtitle {
+        font-size: 0.56em;
+    }
 }
 
 
