@@ -2,7 +2,7 @@
 title: 小程序 access_token 失效与 WSL 端口保留：一次连环排障记录
 excerpt: 订阅消息时好时坏报 40001，根因是同一个 appid 有两套 token 缓存互相顶号；代码改完又被「Port already in use」挡住，而全系统都找不到占用者——WSL2 的 mirrored 网络模式在主机侧保留了一整段 TCP 端口
 date: 2026-09-29 15:30:00
-tags: [微信小程序, access_token, SpringBoot, WSL, 排障]
+tags: [微信小程序, access_token, SpringBoot, WSL, 排障, AI辅助编写]
 category: [运维, 踩坑]
 ---
 {% note %}

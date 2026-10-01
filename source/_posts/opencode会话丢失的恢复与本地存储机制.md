@@ -2,7 +2,7 @@
 title: opencode会话"丢失"的恢复与本地存储机制
 excerpt: 断网+重启后会话消失?其实它一直安安静静躺在本地SQLite里
 date: 2026-08-10 13:20:36
-tags: [opencode, SQLite, 会话恢复, AI]
+tags: [opencode, SQLite, 会话恢复, AI, AI辅助编写]
 category: [工具, 踩坑]
 ---
 {% note %}

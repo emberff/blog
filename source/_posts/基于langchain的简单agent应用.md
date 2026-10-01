@@ -1,7 +1,7 @@
 ---
 title: 基于langchain的简单agent应用
 date: 2026-08-06 15:34:53
-tags: [Agent, LangChain4j, SpringBoot]
+tags: [Agent, LangChain4j, SpringBoot, AI辅助编写]
 category: [学习, Agent]
 ---
 
