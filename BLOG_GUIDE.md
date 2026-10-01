@@ -147,6 +147,7 @@ npm config get registry                              # 期望：https://registry
 | `npm warn allow-scripts ...` | 无害，忽略 | [3.14](docs/踩坑库.md) |
 | 首页变慢 / 又出现外网 CDN | 你改坏了 loader/deferred/sakana，回看该条 | [3.15](docs/踩坑库.md) |
 | 整页加载 4~5 秒、时快时慢 | 先用 `grep -o '<script defer src=' public/index.html \| wc -l` 确认是 **11**（不是就说明 defer 过滤器没了）；是 11 则是跨境链路抖动，见该条 | [3.15](docs/踩坑库.md) / [3.16](docs/踩坑库.md) |
+| 手机端 slogan 折成三行、🌕 掉到下一行 | 下半句的缩进别用全角空格（写死宽度），改用 CSS `padding-left`，且注意居中会抵消缩进 | [6.15](docs/维护与优化.md) |
 | 国内访问 TTFB 抖动大 | Pages 平台限制，配置层无解 | [3.16](docs/踩坑库.md) |
 | `db.json` 体积无故增长 | 无害，它在 `.gitignore` 里；怀疑缓存坏了就 `npm run clean` | [3.17](docs/踩坑库.md) |
 | 从 Windows 侧跑 `wsl.exe` 时 `node: command not found` | 非交互 shell 不读 `.bashrc`，先 `source ~/.nvm/nvm.sh` | [3.18](docs/踩坑库.md) |
