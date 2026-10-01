@@ -557,13 +557,17 @@ index:
 
     # 为空则按 hexo config.subtitle 显示
     # If empty, text based on `subtitle` in hexo config
+    # 注意：emoji 必须写成 HTML 数字实体（&#x1F343;），不能直接写 🍃。
+    # 打字机（typed.js）按 UTF-16 码元逐字推进，直接写 emoji 会被切成半个
+    # 代理项、渲染成 �（白色菱形问号）；写成实体后 typed.js 会把 `&…;`
+    # 整体当作一步输出（见 docs/维护与优化.md 6.16）。
     text: |
-      <span class="emoji">🍃</span>
+      <span class="emoji">&#x1F343;</span>
       <span class="gradient-text">
         惟江上之清风，<br>
         <span class="second-line">与山间之明月!</span>
       </span>
-      🌕
+      &#x1F315;
 
 
     # 通过 API 接口作为首页副标题的内容，必须返回的是 JSON 格式，如果请求失败则按 text 字段显示，该功能必须先开启 typing 打字机功能
