@@ -262,9 +262,18 @@ custom_css:
 
   - /css/fishes
 
+  # TOC 长标题截断修复：覆盖 fluid 1.9.9 的缺陷（上游已修但未发版），见 docs/踩坑库.md 3.20
+  - /css/toc-fix.css
 
+# 尽早写入配色，避免暗色模式闪白。
+# 配合 scripts/defer-scripts.js：head 里的 utils.js / color-schema.js 已改为 defer，
+# 首次绘制前不再有同步脚本兜底，改由这段内联代码把用户手动选择的配色先写到 <html> 上。
+# 常量（localStorage 键 `Fluid_Color_Scheme`、属性 `data-user-color-scheme`、合法值 dark/light）
+# 取自主题 source/js/color-schema.js:8/10/59-62 —— 主题若改了这些名字，这里会**静默失效**
+# （症状：手动选的配色刷新后丢失、闪回 auto），对账与自查见 docs/维护与优化.md 6.15。
+# auto 场景不设属性，交给 CSS 的 prefers-color-scheme 媒体查询处理。
+custom_head: "<script>(function(){try{var s=localStorage.getItem('Fluid_Color_Scheme');if(s==='dark'||s==='light'){document.documentElement.setAttribute('data-user-color-scheme',s)}}catch(e){}})();</script>"
 
-  
 # 自定义底部 HTML 内容（位于 footer 上方），注意不要和 `post: custom` 配置冲突
 # Customize the HTML content at the bottom (located above the footer), be careful not to conflict with `post: custom`
 custom_html: 

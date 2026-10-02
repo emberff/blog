@@ -1,0 +1,24 @@
+/* 修复 fluid 1.9.9 的 TOC 长标题截断缺陷（2026-10-02）
+ *
+ * 症状：含子列表的目录项被 -webkit-line-clamp:2 锁死高度，子标题在目录里看不到。
+ *   实测（小程序 access_token 那篇，22 个标题）：21 个目录项中 3 个被裁，
+ *   最严重的一项 client=51px / scroll=384px。
+ *
+ * 原因：主题 source/css/_pages/_base/_widget/toc.styl:78-83 用了
+ *   display -webkit-box / -webkit-box-orient vertical / -webkit-line-clamp 2，
+ *   而本站 TOC 是 expand_all（默认 true）+ h1~h6 的深层嵌套，父项高度被 clamp 后子列表被裁。
+ *
+ * 上游已修但未发版：fluid-dev/hexo-theme-fluid@48031f9e（2026-03-16），
+ *   改动就是删掉上面 3 行、换成 white-space nowrap。1.9.9 已是 npm latest，等不到修复。
+ *
+ * 本文件用博客自己的 custom_css 覆盖，不改 node_modules（改了会被 npm install 覆盖）。
+ * 升级到含该修复的 fluid 版本后，删掉本文件与 _config.fluid.yml 里 custom_css 的引用即可。
+ */
+.toc-list-item {
+  display: list-item;          /* 覆盖 display: -webkit-box，让高度回归内容 */
+  -webkit-line-clamp: unset;   /* 双保险：clamp 只在 -webkit-box 下生效 */
+  -webkit-box-orient: initial;
+  white-space: nowrap;         /* 长标题单行 + 省略号，而不是撑成两行后被裁 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
