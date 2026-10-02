@@ -19,7 +19,7 @@
 | --- | --- |
 | §1 环境与目录总览 | 本页 |
 | §2 博客编写流程 | [`docs/写作与发布.md`](docs/写作与发布.md) |
-| §3 历史踩坑（3.0–3.19） | [`docs/踩坑库.md`](docs/踩坑库.md) |
+| §3 历史踩坑（3.0–3.20） | [`docs/踩坑库.md`](docs/踩坑库.md) |
 | §4 写作规范 | [`docs/写作与发布.md`](docs/写作与发布.md) |
 | §5 常见问题速查 | 症状表在本页，命令块在 [`docs/写作与发布.md`](docs/写作与发布.md) |
 | §6 待完善与建议 | [`docs/维护与优化.md`](docs/维护与优化.md)（6.8 在本页） |
@@ -60,6 +60,8 @@ git log -1 --oneline               # 确认与 origin/main 是同一个 sha
 | Node / npm | **v24.19.0**（nvm 管理）/ **11.17.0** —— WSL 侧实测；Windows 侧为 v22.20.0 / npm 10.9.3，同样能跑 hexo 8.1.2 |
 | 全局 hexo-cli | 4.3.2，**不必需**——用 `npx hexo` / `npm run server` 才会用到仓库锁定的 hexo 8.1.2 |
 
+> **fluid v2.0 不要当成"有新版可升"**：它只是开发分支（npm 无 2.x、无 tag、无 release，`package.json` 版本号还写着 1.9.9）。它相对 1.9.9 的实测性能差异、以及对本站 7 处自定义的破坏面，见 [`docs/维护与优化.md` 6.19](docs/维护与优化.md)——**升级前先读那一节**。
+
 ```bash
 # 前置条件（均已就绪，换机器时按此重设）
 git config --global user.name  "Emberizaf"          # 必须全局：.deploy_git 不读仓库本地配置（第 3.2 条）
@@ -70,7 +72,7 @@ gh auth status                                       # 期望：已登录 emberf
 npm config get registry                              # 期望：https://registry.npmmirror.com
 ```
 
-- 源码仓库：`git@github.com:emberff/blog.git`，分支 `main`，当前最新提交 **`122496b`**（`docs: 记录 2026-09-29 部署`）。
+- 源码仓库：`git@github.com:emberff/blog.git`，分支 `main`（**最新提交以 `git log -1 --oneline` 为准**，别把任何写死的 sha 当基线——这里原来记的 sha 早就过时了）。
 - 部署目标：`git@github.com:emberff/emberff.github.io.git`，分支 `main`（GitHub Pages source = `main` + `/`）。
 - 站点线上地址：`https://emberff.github.io`。
 
