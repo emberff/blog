@@ -11,6 +11,7 @@
 | 遇到一个报错，想知道以前是否踩过 | 先看本页下面的「症状速查」；需要原因分析再进 [`docs/踩坑库.md`](docs/踩坑库.md) | 约 335 行 |
 | 改仓库本身：项目结构 / 性能 / 配置 / 版本 | [`docs/维护与优化.md`](docs/维护与优化.md) | 约 235 行 |
 | 忘了某条命令 / 版本号 / 目录在哪 | 本页第 1 节 | — |
+| 只想看文章历史 / 只想看框架改动 | 本页 §1.5「两条管理线」，原理见 [`docs/写作与发布.md`](docs/写作与发布.md) §2.1 | — |
 | **改了仓库，要不要记点什么** | 本页「改动必须回写手册」 | — |
 
 **章节编号沿用原手册**（`1`–`6`），只是分布到了四个文件里，所以仓库里任何「见第 3.15 条」「§6.6」的引用**仍然直接有效**：
@@ -122,6 +123,36 @@ npm config get registry                              # 期望：https://registry
 ```
 
 要点：`.deploy_git` 是 deployer 自己维护的**独立临时仓库**，本地分支是 `master`，跟踪远程 `main`；它**不继承博客仓库的本地 git 配置**，所以全局 `user.name/user.email` 是硬前置，否则静默不推送（第 3.2 条）。
+
+### 1.5 两条管理线：文章 / 框架分开看历史
+
+文章和框架共用一条 `main`（**不是**两个仓库、**不是**两条分支），但查看历史时分成两条线，靠 `.git/config` 里的两个别名：
+
+```bash
+git posts     # 文章线：只列改动过 source/_posts 的提交
+git site      # 框架线：列其余全部提交（配置 / 主题 / 脚本 / 手册）
+```
+
+**这两个别名不随 `git pull` / `git clone` 传递**——它们长在各自克隆的 `.git/config` 里。换机器或新建克隆后必须重跑一次：
+
+```bash
+cd <副本根目录>
+git config --local core.quotepath false
+git config --local alias.posts 'log --oneline --graph --decorate -- source/_posts'
+git config --local alias.site  'log --oneline --graph --decorate -- . :!source/_posts'
+git config --local --get core.quotepath           # 自查：false
+git config --local --get-regexp '^alias\.'        # 自查：两条别名都在
+```
+
+**`core.quotepath false` 不是可选项**：默认 `true` 会把文章的中文文件名（仓库里 20 篇全是中文名）转义成 `...242\221\347\250\213...` 这种八进制串，`git posts --stat` 和 `git show` 里根本认不出改的是哪篇。加这一行之后中文路径原样显示。
+
+**想看每篇文章动了哪个文件**，用 `--stat`，但**不能追加在 `git posts` 后面**——别名展开后末尾的 `--` 会把后面的参数当成路径，正确写法是把 `--stat` 放在 `--` 之前：
+
+```bash
+git log --oneline --stat -- source/_posts        # 文章线 + 文件清单
+```
+
+**用 `--local` 而不是 `--global`**：`posts` / `site` 是很通用的词，设成全局会占用所有仓库的这两个名字。这条命令只作用于当前克隆，所以 WSL 与 Windows 两侧要**各跑一次**（路径见 1.1 的副本表）。原理、判定依据和"为什么不拆仓库"见 [`docs/写作与发布.md`](docs/写作与发布.md) §2.1。
 
 ---
 
