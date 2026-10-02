@@ -146,7 +146,8 @@ npm config get registry                              # 期望：https://registry
 | `EADDRINUSE`（4001 等端口） | 换端口：`npm run server -- -p 4011` | [3.13](docs/踩坑库.md) |
 | `npm warn allow-scripts ...` | 无害，忽略 | [3.14](docs/踩坑库.md) |
 | 首页变慢 / 又出现外网 CDN | 你改坏了 loader/deferred/sakana，回看该条 | [3.15](docs/踩坑库.md) |
-| 整页加载 4~5 秒、时快时慢 | 先用 `grep -o '<script defer src=' public/index.html \| wc -l` 确认是 **11**（不是就说明 defer 过滤器没了）；是 11 则是跨境链路抖动，见该条 | [3.15](docs/踩坑库.md) / [3.16](docs/踩坑库.md) |
+| 整页加载 4~5 秒、时快时慢 | 先用 `grep -o '<script defer src=' public/index.html \| wc -l` 确认是 **13**（body 11 + head 2；不是就说明 defer 过滤器没了）；是 13 则是跨境链路抖动，见该条 | [3.15](docs/踩坑库.md) / [3.16](docs/踩坑库.md) |
+| 文章目录里看不到子标题 / 目录项缺失 | 打的是 fluid 1.9.9 的 TOC 截断缺陷；确认 `grep -o 'toc-fix' public/index.html \| wc -l` ≥1（补丁还在） | [3.20](docs/踩坑库.md) |
 | 手机端 slogan 折成三行、🌕 掉到下一行 | 下半句的缩进别用全角空格（写死宽度），改用 CSS `padding-left`，且注意居中会抵消缩进 | [6.15](docs/维护与优化.md) |
 | emoji 闪出白色菱形问号（�） | 不是编码问题：打字机按 UTF-16 码元逐字，emoji 被切成半个代理项。改成 HTML 数字实体 `&#x1F343;` | [6.16](docs/维护与优化.md) |
 | 国内访问 TTFB 抖动大 | Pages 平台限制，配置层无解 | [3.16](docs/踩坑库.md) |
